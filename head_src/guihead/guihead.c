@@ -69,6 +69,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	splash = loadBool(SHOW_SPLASH)
 			&& strstr(lpCmdLine, "--l4j-no-splash") == NULL;
 	restartOnCrash = loadBool(RESTART_ON_CRASH);
+    int restartOnStatus = loadInt(RESTART_ON_STATUS);
 
 	// if we should restart on crash, we must also stay alive to check for crashes
 	stayAlive = restartOnCrash ||
@@ -148,14 +149,13 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		
-		if (restartOnCrash && dwExitCode != 0)
+        if (dwExitCode != 0 && (restartOnCrash || dwExitCode == restartOnStatus))
 		{
 	  		debug("Exit code:\t%d, restarting the application!\n", dwExitCode);
   		}
 
   		closeProcessHandles();
-	} while (restartOnCrash && dwExitCode != 0);
+	} while (dwExitCode != 0 && (restartOnCrash || dwExitCode == restartOnStatus));
 
 	debug("Exit code:\t%d\n", dwExitCode);
 	closeLogFile();

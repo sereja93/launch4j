@@ -103,6 +103,8 @@ public class Config implements IValidatable {
 	private VersionInfo versionInfo;
 	private Msg	messages;
 
+	private int restartOnStatus;
+
 	public void checkInvariants() {
 		Validator.checkTrue(outfile != null && outfile.getPath().endsWith(".exe"),
 				"outfile", Messages.getString("Config.specify.output.exe"));
@@ -152,7 +154,7 @@ public class Config implements IValidatable {
 		checkJniInvariants();
 		jre.checkInvariants();
 	}
-	
+
 	private void checkJniInvariants() {
 		// TODO: Remove once JNI is fully implemented.
 		if (isJniApplication()) {
@@ -171,7 +173,7 @@ public class Config implements IValidatable {
 					"64-bit JRE not supported.");
 		}
 	}
-	
+
 	public void validate() {
 		checkInvariants();
 		if (classPath != null) {
@@ -211,11 +213,11 @@ public class Config implements IValidatable {
 	public void setErrTitle(String errTitle) {
 		this.errTitle = errTitle;
 	}
-	
+
 	public boolean isGuiApplication() {
 		return GUI_HEADER.equals(headerType) || JNI_GUI_HEADER_32.equals(headerType);
 	}
-	
+
 	public boolean isJniApplication() {
 		return JNI_GUI_HEADER_32.equals(headerType)
 				|| JNI_CONSOLE_HEADER_32.equals(headerType);
@@ -265,7 +267,7 @@ public class Config implements IValidatable {
 		this.libs = libs;
 	}
 
-	/** Wrapper's manifest for User Account Control. */ 
+	/** Wrapper's manifest for User Account Control. */
 	public File getManifest() {
     	return manifest;
     }
@@ -303,7 +305,7 @@ public class Config implements IValidatable {
 	public ClassPath getClassPath() {
 		return classPath;
 	}
-	
+
 	public void setClassPath(ClassPath classpath) {
 		this.classPath = classpath;
 	}
@@ -343,16 +345,26 @@ public class Config implements IValidatable {
 	public void setStayAlive(boolean stayAlive) {
 		this.stayAlive = stayAlive;
 	}
-	
+
 	/** Restart the application after a crash (i.e. exit code other than 0) */
 	public boolean isRestartOnCrash() {
 		return restartOnCrash;
-	}
-	
+    }
+
+    public int getRestartOnStatus() {
+        return restartOnStatus;
+    }
+
+    public void setRestartOnStatus(int status) {
+        if (status < 5 || status > 255)
+            throw new NumberFormatException("Restart-Status needs to be between 5 and 255!");
+        this.restartOnStatus = status;
+    }
+
 	public void setRestartOnCrash(boolean restartOnCrash) {
 		this.restartOnCrash = restartOnCrash;
 	}
-	
+
 	public VersionInfo getVersionInfo() {
 		return versionInfo;
 	}
@@ -373,7 +385,7 @@ public class Config implements IValidatable {
 		int x = Arrays.asList(PRIORITY_CLASS_NAMES).indexOf(getPriority());
 		return x != -1 ? x : 0;
 	}
-	
+
 	public void setPriorityIndex(int x) {
 		priority = PRIORITY_CLASS_NAMES[x];
 	}
@@ -385,11 +397,11 @@ public class Config implements IValidatable {
 	public void setPriority(String priority) {
 		this.priority = priority;
 	}
-	
+
 	public int getPriorityClass() {
 		return PRIORITY_CLASSES[getPriorityIndex()];
 	}
-	
+
 	public String getDownloadUrl() {
 		return downloadUrl;
 	}
@@ -413,7 +425,7 @@ public class Config implements IValidatable {
 	public void setMessages(Msg messages) {
 		this.messages = messages;
 	}
-	
+
 	public SingleInstance getSingleInstance() {
     	return singleInstance;
     }

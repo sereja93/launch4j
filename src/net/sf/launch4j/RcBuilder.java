@@ -102,6 +102,8 @@ public class RcBuilder {
 	public static final int REQUIRES_64_BIT = 29;
 	public static final int RESTART_ON_CRASH = 31;
 
+	public static final int RESTART_ON_STATUS	= 33;
+
 	public static final int STARTUP_ERR = 101;
 	public static final int JRE_NOT_FOUND_ERR = 102;
 	public static final int JRE_VERSION_ERR = 103;
@@ -136,6 +138,7 @@ public class RcBuilder {
 		addText(PRIORITY_CLASS, String.valueOf(c.getPriorityClass()));
 		addTrue(GUI_HEADER_STAYS_ALIVE, c.isStayAlive());
 		addTrue(RESTART_ON_CRASH, c.isRestartOnCrash());
+		addInteger(RESTART_ON_STATUS, c.getRestartOnStatus());
 		addSplash(c.getSplash());
 		addMessages(c);
 
