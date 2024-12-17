@@ -2,3 +2,5 @@
 /target
 .idea
 launch4j.iml
+/launch4j-*
+/lib

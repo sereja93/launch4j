@@ -2,9 +2,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>net.sf.launch4j</groupId>
+	<groupId>net.eraga.launch4j</groupId>
 	<artifactId>launch4j</artifactId>
-	<version>${launch4j.version}</version>
+	<version>3.50</version>
 	<name>Launch4j</name>
 	<description>Cross-platform Java executable wrapper for creating lightweight Windows native EXEs. Provides advanced JRE search, application startup configuration and better user experience.</description>
 	<url>http://sourceforge.net/projects/launch4j/</url>
@@ -29,23 +29,23 @@
 		</developer>
 	</developers>
 
-	<scm>
-		<connection>scm:git:http://git.code.sf.net/p/launch4j/git</connection>
-		<developerConnection>scm:git:http://git.code.sf.net/p/launch4j/git</developerConnection>
-		<url>http://sourceforge.net/p/launch4j/git/ci/master/tree/</url>
-	</scm>
 
 	<distributionManagement>
+		<repository>
+			<id>nexus-server</id>
+			<url>${nexus.url}/repository/eraga-private-maven-releases/</url>
+		</repository>
 		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<id>nexus-server</id>
+			<url>${nexus.url}/repository/eraga-private-maven-unstable/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
 	<properties>
+		<nexus.url>https://packages.eraga.net</nexus.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<versionNumber>${launch4j.version}.0.0</versionNumber>
-		<version>${launch4j.version}</version>
+		<versionNumber>3.50.0.0</versionNumber>
+		<version>3.50</version>
 	</properties>
 
 	<dependencies>
@@ -155,6 +155,20 @@
 			</resource>
 		</resources>
 		<plugins>
+
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.1</version>
+				<executions>
+					<execution>
+						<id>default-deploy</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
@@ -349,8 +363,8 @@
 						<version>1.6.2</version>
 						<extensions>true</extensions>
 						<configuration>
-							<serverId>ossrh</serverId>
-							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<serverId>nexus-server</serverId>
+							<nexusUrl>${nexus.url}</nexusUrl>
 							<!-- Release has to be executed manually -->
 							<autoReleaseAfterClose>false</autoReleaseAfterClose>
 						</configuration>
@@ -379,50 +393,6 @@
 			<properties>
 				<bin.dir>bin-win32</bin.dir>
 			</properties>
-			<build>
-				<plugins>
-					<!-- Creates Launch4j executable -->
-					<plugin>
-						<groupId>com.akathist.maven.plugins.launch4j</groupId>
-						<artifactId>launch4j-maven-plugin</artifactId>
-						<version>1.7.25</version>
-						<executions>
-							<execution>
-								<id>launch4j</id>
-								<phase>package</phase>
-								<goals>
-									<goal>launch4j</goal>
-								</goals>
-								<configuration>
-									<headerType>gui</headerType>
-									<dontWrapJar>true</dontWrapJar>
-									<jar>${project.build.finalName}.jar</jar>
-									<outfile>launch4j.exe</outfile>
-									<errTitle>launch4j</errTitle>
-									<chdir>.</chdir>
-									<stayAlive>false</stayAlive>
-
-									<jre>
-										<minVersion>1.8.0</minVersion>
-									</jre>
-									<versionInfo>
-										<fileVersion>${versionNumber}</fileVersion>
-										<txtFileVersion>${version}</txtFileVersion>
-										<productVersion>${versionNumber}</productVersion>
-										<txtProductVersion>${version}</txtProductVersion>
-										<fileDescription>Cross-platform Java application wrapper</fileDescription>
-										<copyright>Copyright (C) 2004, 2017 Grzegorz Kowal</copyright>
-										<productName>launch4j</productName>
-										<companyName>http://launch4j.sourceforge.net/</companyName>
-										<internalName>GUI launcher</internalName>
-										<originalFilename>launch4j.exe</originalFilename>
-									</versionInfo>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
 		</profile>
 		<!-- Generic distribution profile -->
 		<profile>
