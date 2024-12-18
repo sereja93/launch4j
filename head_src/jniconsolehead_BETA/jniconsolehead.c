@@ -34,6 +34,7 @@
 extern FILE* hLog;
 
 BOOL restartOnCrash = FALSE;
+int restartOnStatus = 0;
 
 int main(int argc, char* argv[])
 {
@@ -74,7 +75,7 @@ int main(int argc, char* argv[])
 	}
 
 	restartOnCrash = loadBool(RESTART_ON_CRASH);
-	int restartOnStatus = loadInt(RESTART_ON_STATUS);
+	restartOnStatus = loadInt(RESTART_ON_STATUS);
 	DWORD dwExitCode;
 
 	do

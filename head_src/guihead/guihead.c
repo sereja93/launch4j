@@ -43,7 +43,7 @@ BOOL splashTimeoutErr;
 BOOL waitForWindow;
 BOOL restartOnCrash = FALSE;
 int splashTimeout = DEFAULT_SPLASH_TIMEOUT;
-
+int restartOnStatus = 0;
 int APIENTRY WinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
                      LPSTR     lpCmdLine,
@@ -69,10 +69,10 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	splash = loadBool(SHOW_SPLASH)
 			&& strstr(lpCmdLine, "--l4j-no-splash") == NULL;
 	restartOnCrash = loadBool(RESTART_ON_CRASH);
-    int restartOnStatus = loadInt(RESTART_ON_STATUS);
+    restartOnStatus = loadInt(RESTART_ON_STATUS);
 
 	// if we should restart on crash, we must also stay alive to check for crashes
-	stayAlive = restartOnCrash ||
+	stayAlive = restartOnCrash || (restartOnStatus != 0) ||
 			  (loadBool(GUI_HEADER_STAYS_ALIVE)
 			&& strstr(lpCmdLine, "--l4j-dont-wait") == NULL);
 			
